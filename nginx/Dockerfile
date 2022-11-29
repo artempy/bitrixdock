@@ -4,8 +4,8 @@ COPY conf/nginx.conf /etc/nginx/
 COPY conf/default.conf /etc/nginx/conf.d/
 COPY conf/upstream.conf /etc/nginx/conf.d/
 
-RUN usermod -u 1000 www-data
+RUN usermod -u 1001 www-data
 
 CMD ["nginx"]
 
-EXPOSE 80 443
+EXPOSE 8080

@@ -1,6 +1,19 @@
 version: '2'
 
 services:
+    nginx:
+        build: ./${WEB_SERVER_TYPE}
+        depends_on:
+            - source
+        volumes_from:
+            - source
+        ports:
+            - 127.0.0.1:8090:80
+        links:
+            - php
+        networks:
+            - bitrix
+        restart: always
     php:
         build: ./${PHP_VERSION}
         volumes_from:
@@ -11,8 +24,6 @@ services:
         networks:
             - bitrix
         restart: always
-        ports:
-            - 127.0.0.1:9000:9000
     db:
         build: ./${DB_SERVER_TYPE}
         platform: linux/amd64
