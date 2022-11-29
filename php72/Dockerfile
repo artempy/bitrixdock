@@ -12,13 +12,14 @@ RUN apt-get update \
 	libjpeg62-turbo-dev \
 	libpng-dev \
 	curl libcurl4-gnutls-dev \
+	libmagickwand-dev \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 RUN pecl install mcrypt && docker-php-ext-enable mcrypt
 RUN docker-php-ext-install gettext && docker-php-ext-enable gettext
 RUN pecl install memcached && docker-php-ext-enable memcached
-RUN docker-php-ext-install gd
-RUN docker-php-ext-install mysqli bcmath intl xml curl hash zip dom session opcache
+RUN docker-php-ext-install gd mysqli bcmath intl xml curl hash zip dom session opcache
+RUN docker-php-ext-enable mysqli bcmath intl xml curl hash zip dom session opcache gd
 
 # DO NOT install php7.3-xdebug package for site running in production! It will slow it down significantly.
 
