@@ -11,27 +11,15 @@ services:
         networks:
             - bitrix
         restart: always
-    web_server:
-        build: ./${WEB_SERVER_TYPE}
-        depends_on:
-            - source
-        volumes_from:
-            - source
         ports:
-            - '${INTERFACE}:80:80'
-            - '${INTERFACE}:443:443'
-        links:
-            - php
-        networks:
-            - bitrix
-        restart: always
+            - 127.0.0.1:9000:9000
     db:
         build: ./${DB_SERVER_TYPE}
         platform: linux/amd64
         volumes_from:
             - source
         ports:
-            - '${INTERFACE}:3306:3306'
+            - 127.0.0.1:33060:3306
         environment:
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
@@ -46,7 +34,7 @@ services:
         volumes_from:
             - source
         ports:
-            - '${INTERFACE}:11211:11211'
+            - '127.0.0.1:11211:11211'
         networks:
             - bitrix
         restart: always
@@ -55,7 +43,7 @@ services:
         links:
             - db:db
         ports:
-            - '${INTERFACE}:8080:80'
+            - '${INTERFACE}:18080:80'
         environment:
             UPLOAD: 1024M # upload_max_filesize, post_max_size
         networks:
@@ -67,7 +55,7 @@ services:
             - ./logs/php:/var/log/php
             - ./logs/db:/var/log/mysql
             - ./logs/memcached:/var/log/memcached
-            - db:/var/lib/mysql
+            - /docker-mysql:/var/lib/mysql
             - cache:/var/lib/memcached
             - ./www/html:/var/www/html
             - ${SITE_PATH}:/var/www/bitrix
@@ -76,8 +64,6 @@ services:
             - bitrix
 
 volumes:
-    db:
-        driver: local
     cache:
         driver: local
 
