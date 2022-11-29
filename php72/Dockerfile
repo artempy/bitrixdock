@@ -2,23 +2,23 @@ FROM php:7.2-fpm-buster
 
 RUN apt-get update \
     && apt-get -y --no-install-recommends install \
-    php7.2-memcached \
-    php7.2-memcache \
-    php7.2-mbstring \
-    php7.2-mysql \
-    php7.2-mysqli \
-    php7.2-curl \
-    php7.2-intl \
-    php7.2-interbase \
-    php7.2-soap \
-    php7.2-gd \
-    php7.2-imagick \
-    php7.2-ldap \
-    php7.2-opcache \
-    php7.2-zip \
-    php-pear php-dev libmcrypt-dev gcc make autoconf libc-dev pkg-config \
-    && pecl install mcrypt-1.0.3 \
+    libmemcached-dev zlib1g-dev \
+    libfreetype6-dev \
+	libjpeg62-turbo-dev \
+	libpng-dev \
+	libmcrypt-dev \
+	libmagickwand-dev \
+	libfreetype6-dev \
+	libjpeg62-turbo-dev \
+	libpng-dev \
+	curl libcurl4-gnutls-dev \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+
+RUN pecl install mcrypt && docker-php-ext-enable mcrypt
+RUN docker-php-ext-install gettext && docker-php-ext-enable gettext
+RUN pecl install memcached && docker-php-ext-enable memcached
+RUN docker-php-ext-install gd
+RUN docker-php-ext-install mysqli bcmath intl xml curl hash zip dom session opcache
 
 # DO NOT install php7.3-xdebug package for site running in production! It will slow it down significantly.
 
